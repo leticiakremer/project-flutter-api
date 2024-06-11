@@ -1,4 +1,3 @@
-import 'package:projetoflutterapi/src/models/episode.dart';
 import 'package:projetoflutterapi/src/models/origen.dart';
 
 class Character {
@@ -10,7 +9,7 @@ class Character {
   final Origin origin;
   final String location;
   final String species;
-  final List<Episode> episodes;
+  final List<String> episodes;
 
   const Character({
     required this.name,
@@ -24,8 +23,7 @@ class Character {
     required this.episodes,
   });
 
-  factory Character.fromJson(
-      Map<String, dynamic> json, List<Episode> episodes) {
+  factory Character.fromJson(Map<String, dynamic> json) {
     return Character(
       name: json["name"],
       image: json["image"],
@@ -35,7 +33,7 @@ class Character {
       origin: Origin.fromJson(json["origin"]),
       location: json["location"]['name'],
       species: json["species"],
-      episodes: episodes,
+      episodes: json["episode"].cast<String>(),
     );
   }
 }

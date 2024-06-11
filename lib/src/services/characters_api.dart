@@ -6,28 +6,27 @@ import 'package:projetoflutterapi/src/models/episode.dart';
 import 'package:projetoflutterapi/src/services/constants.dart';
 
 class CharactersApi {
+  static int pageLimit = 1;
+
   Future<List<Character>> fetchCharacters(int page) async {
     try {
-      final response =
-          await http.get(Uri.parse('$BASE_URL/character/?page=$page'));
+      final response = await http.get(Uri.parse(
+          '$BASE_URL/character/?page=${page <= pageLimit ? page : pageLimit}'));
 
       if (response.statusCode != 200) {
         throw Exception("Erro ao buscar os personagens");
       }
 
-      var jsonResponse = json.decode(response.body)["results"] as List;
-      List<Character> characters = [];
-
-      for (var jsonCharacter in jsonResponse) {
-        List<String> episodeUrls =
-            List<String>.from(jsonCharacter['episode'] ?? []);
-        List<Episode> episodes = await fetchEpisodes(episodeUrls);
-        characters.add(Character.fromJson(jsonCharacter, episodes));
-      }
+      final jsonResponse = json.decode(response.body);
+      pageLimit = jsonResponse["info"]["pages"];
+      var characterList = jsonResponse["results"] as List;
+      List<Character> characters = characterList
+          .map((jsonCharacter) => Character.fromJson(jsonCharacter))
+          .toList();
 
       return characters;
     } catch (e) {
-      throw Exception("Erro ao buscar os personagens");
+      throw Exception("Erro ao buscar os personagens: $e");
     }
   }
 
@@ -43,7 +42,7 @@ class CharactersApi {
         }
       }
     } catch (e) {
-      throw Exception("Erro ao buscar os episódios");
+      throw Exception("Erro ao buscar os episódios: $e");
     }
 
     return episodes;

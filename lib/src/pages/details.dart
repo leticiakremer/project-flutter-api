@@ -1,10 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:projetoflutterapi/src/models/character.dart';
+import 'package:projetoflutterapi/src/models/episode.dart';
+import 'package:projetoflutterapi/src/services/characters_api.dart';
+import 'package:projetoflutterapi/src/widgets/character_image.dart';
+import 'package:projetoflutterapi/src/widgets/character_info.dart';
+import 'package:projetoflutterapi/src/widgets/episodes_list.dart';
 
-class Details extends StatelessWidget {
+class Details extends StatefulWidget {
   final Character character;
 
   const Details({Key? key, required this.character}) : super(key: key);
+
+  @override
+  State<Details> createState() => _DetailsState();
+}
+
+class _DetailsState extends State<Details> {
+  final ValueNotifier<bool> _isLoading = ValueNotifier<bool>(true);
+  final ValueNotifier<List<Episode>> _episodes =
+      ValueNotifier<List<Episode>>([]);
+  final CharactersApi _charactersApi = CharactersApi();
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchEpisodes();
+  }
+
+  void _fetchEpisodes() async {
+    try {
+      final episodes =
+          await _charactersApi.fetchEpisodes(widget.character.episodes);
+      _episodes.value = episodes;
+    } catch (e) {
+      // Handle error
+    } finally {
+      _isLoading.value = false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,141 +57,24 @@ class Details extends StatelessWidget {
         child: Center(
           child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 8),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(30),
-                  child: Hero(
-                    tag: character.image,
-                    child: Image.network(
-                      character.image,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
+              CharacterImage(
+                imageUrl: widget.character.image,
+                heroTag: widget.character.image,
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      character.name,
-                      style: const TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 255, 255, 255),
-                        fontFamily: 'Roboto',
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 30,
-                    ),
-                    Container(
-                      height: 40,
-                      width: 40,
-                      padding: const EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 98, 207, 101),
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                      child: const Icon(
-                        Icons.star_border_outlined,
-                        size: 30,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF302F2F),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Column(
-                  children: [
-                    Container(
-                      height: 150,
-                      width: double.infinity,
-                      margin: const EdgeInsets.all(25),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF464646),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text(
-                            'Informações do personagem',
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Color.fromARGB(255, 255, 255, 255),
-                              fontFamily: 'Roboto',
-                            ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Text(
-                                'Localização: ',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  color: Color.fromARGB(255, 255, 255, 255),
-                                  fontFamily: 'Roboto',
-                                ),
-                              ),
-                              Text(
-                                character.location,
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.green,
-                                  fontFamily: 'Roboto',
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Text(
-                                'Espécie: ',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  color: Color.fromARGB(255, 255, 255, 255),
-                                  fontFamily: 'Roboto',
-                                ),
-                              ),
-                              Text(
-                                character.species,
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.green,
-                                  fontFamily: 'Roboto',
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      height: 150,
-                      width: double.infinity,
-                      margin: const EdgeInsets.all(25),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF464646),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Text(character.episodes.toString(),
-                          style: const TextStyle(
-                            fontSize: 20,
-                            color: Color.fromARGB(255, 255, 255, 255),
-                            fontFamily: 'Roboto',
-                          )),
-                    )
-                  ],
-                ),
+              CharacterInfo(character: widget.character),
+              ValueListenableBuilder(
+                valueListenable: _isLoading,
+                builder: (context, isLoading, child) {
+                  return ValueListenableBuilder(
+                    valueListenable: _episodes,
+                    builder: (context, episodes, child) {
+                      return EpisodesList(
+                        episodes: episodes,
+                        isLoading: isLoading,
+                      );
+                    },
+                  );
+                },
               ),
             ],
           ),
