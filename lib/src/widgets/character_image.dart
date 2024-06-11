@@ -25,12 +25,15 @@ class CharacterImage extends StatelessWidget {
         },
         child: AnimatedClipRRect(
           borderRadius: BorderRadius.circular(20),
-          child: Image.network(
-            imageUrl,
-            fit: BoxFit.fill,
-            height: height,
-            width: width,
-          ),
+          child: Image.network(imageUrl,
+              fit: BoxFit.fill,
+              height: height,
+              width: width, errorBuilder: (context, error, stackTrace) {
+            return const CircularProgressIndicator(
+              color: Colors.grey,
+              strokeWidth: 2,
+            );
+          }),
         ),
       ),
     );

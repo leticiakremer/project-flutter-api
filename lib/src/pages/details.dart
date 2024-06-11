@@ -45,13 +45,24 @@ class _DetailsState extends State<Details> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
+        leading: GestureDetector(
+          onTap: () {
+            Feedback.forTap(context);
             Navigator.pop(context);
           },
-          color: Colors.green,
+          child: const Row(
+            children: [
+              Expanded(
+                child: Icon(
+                  Icons.arrow_back,
+                  color: Colors.green,
+                ),
+              ),
+              Text('Voltar', style: TextStyle(color: Colors.green)),
+            ],
+          ),
         ),
+        leadingWidth: MediaQuery.sizeOf(context).width * 0.2,
       ),
       body: SingleChildScrollView(
         child: Center(

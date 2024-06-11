@@ -47,4 +47,21 @@ class CharactersApi {
 
     return episodes;
   }
+
+  Future<List<Character>> fetchCharactersFiltered(String filter) async {
+    try {
+      final response =
+          await http.get(Uri.parse('$BASE_URL/character?name=$filter'));
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        return (data['results'] as List)
+            .map((characterJson) => Character.fromJson(characterJson))
+            .toList();
+      } else {
+        throw Exception('Erro ao buscar os personagens filtrados');
+      }
+    } catch (e) {
+      throw Exception('Erro ao buscar os personagens filtrados: $e');
+    }
+  }
 }
