@@ -1,8 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:projetoflutterapi/src/models/character.dart';
-import 'package:projetoflutterapi/src/pages/details.dart';
-import 'package:projetoflutterapi/src/services/characters_api.dart';
-import 'package:projetoflutterapi/src/widgets/character_image.dart';
+import 'package:get_it/get_it.dart';
+import 'package:projetoflutterapi/src/core/entities/character.dart';
+import 'package:projetoflutterapi/src/core/entities/user_entitie.dart';
+import 'package:projetoflutterapi/src/features/details/presentation/details.dart';
+import 'package:projetoflutterapi/src/features/login/presentation/login.dart';
+import 'package:projetoflutterapi/src/features/splash/presentation/splash.dart';
+import 'package:projetoflutterapi/src/features/widgets/character_image.dart';
+import 'package:projetoflutterapi/src/infra/services/characters_api.dart';
+import 'package:projetoflutterapi/src/infra/services/firebase_auth_service.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -90,7 +96,91 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    AuthService authService = GetIt.I.get<AuthService>();
+    final UserEntity user = GetIt.I.get<UserEntity>();
     return Scaffold(
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: const BoxDecoration(
+                color: Colors.green,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CircleAvatar(
+                    radius: 30,
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.green,
+                        border: Border.fromBorderSide(
+                          BorderSide(
+                            color: Colors.green,
+                            width: 2,
+                          ),
+                        ),
+                      ),
+                      child: ClipOval(
+                        child: Image.asset(
+                          'assets/logo/logo.png',
+                          height: 50,
+                          width: 50,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: Text(
+                      user.name,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5),
+                    child: Text(
+                      user.email,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            ListTile(
+              title: const Text('Sair'),
+              leading: const Icon(Icons.exit_to_app),
+              onTap: () async {
+                await authService.signOut();
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const Splash(),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+      appBar: AppBar(
+        title: Text(
+          'Olá, ${user.name}',
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+          ),
+        ),
+        centerTitle: true,
+      ),
       body: SafeArea(
         child: Column(
           children: [

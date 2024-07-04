@@ -1,8 +1,25 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:projetoflutterapi/src/pages/home.dart';
+import 'package:get_it/get_it.dart';
+import 'package:projetoflutterapi/src/core/entities/user_entitie.dart';
+import 'package:projetoflutterapi/src/features/splash/presentation/splash.dart';
+import 'package:projetoflutterapi/src/infra/services/firebase_auth_service.dart';
 
-void main() {
+import 'src/infra/firebase_config/firebase_options.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  _setupGetIt();
   runApp(const MyApp());
+}
+
+_setupGetIt() {
+  GetIt.I.registerSingleton<UserEntity>(UserEntity.initial());
+  GetIt.I.registerSingleton<AuthService>(
+    FirebaseAuthServiceImp(FirebaseAuth.instance),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -22,18 +39,14 @@ class MyApp extends StatelessWidget {
         ),
         scaffoldBackgroundColor: Colors.black,
         textTheme: const TextTheme(
-          bodyText1: TextStyle(
+          bodyMedium: TextStyle(
             color: Colors.white,
             fontSize: 16,
-          ),
-          bodyText2: TextStyle(
-            color: Colors.white,
-            fontSize: 14,
           ),
         ),
       ),
       themeMode: ThemeMode.dark,
-      home: const Home(),
+      home: const Splash(),
     );
   }
 }

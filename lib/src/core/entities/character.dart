@@ -1,4 +1,4 @@
-import 'package:projetoflutterapi/src/models/origen.dart';
+import 'package:projetoflutterapi/src/core/entities/origen.dart';
 
 class Character {
   final String name;

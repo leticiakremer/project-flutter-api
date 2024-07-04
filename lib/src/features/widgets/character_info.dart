@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:projetoflutterapi/src/models/character.dart';
+import 'package:projetoflutterapi/src/core/entities/character.dart';
 
 class CharacterInfo extends StatelessWidget {
   final Character character;

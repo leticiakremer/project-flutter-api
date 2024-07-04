@@ -1,24 +1,21 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:projetoflutterapi/src/models/character.dart';
-import 'package:projetoflutterapi/src/models/episode.dart';
-import 'package:projetoflutterapi/src/services/constants.dart';
+import 'package:projetoflutterapi/src/core/consts/constants.dart';
+import 'package:projetoflutterapi/src/core/entities/character.dart';
+import 'package:projetoflutterapi/src/core/entities/episode.dart';
 
 class CharactersApi {
-  static int pageLimit = 1;
-
   Future<List<Character>> fetchCharacters(int page) async {
     try {
-      final response = await http.get(Uri.parse(
-          '$BASE_URL/character/?page=${page <= pageLimit ? page : pageLimit}'));
+      final response =
+          await http.get(Uri.parse('$BASE_URL/character/?page=$page'));
 
       if (response.statusCode != 200) {
         throw Exception("Erro ao buscar os personagens");
       }
 
       final jsonResponse = json.decode(response.body);
-      pageLimit = jsonResponse["info"]["pages"];
       var characterList = jsonResponse["results"] as List;
       List<Character> characters = characterList
           .map((jsonCharacter) => Character.fromJson(jsonCharacter))

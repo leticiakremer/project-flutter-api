@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:projetoflutterapi/src/models/episode.dart';
+import 'package:projetoflutterapi/src/core/entities/episode.dart';
 
 class EpisodesList extends StatelessWidget {
   final List<Episode> episodes;

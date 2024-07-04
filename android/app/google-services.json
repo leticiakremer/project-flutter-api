@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "213582965017",
+    "project_id": "as-dart-ulbra",
+    "storage_bucket": "as-dart-ulbra.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:213582965017:android:01146aa05692135a2cbd88",
+        "android_client_info": {
+          "package_name": "com.example.projetoflutterapi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVgi22bSTGxNignGcprP4k_OdALWerUjg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

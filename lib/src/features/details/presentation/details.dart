@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:projetoflutterapi/src/models/character.dart';
-import 'package:projetoflutterapi/src/models/episode.dart';
-import 'package:projetoflutterapi/src/services/characters_api.dart';
-import 'package:projetoflutterapi/src/widgets/character_image.dart';
-import 'package:projetoflutterapi/src/widgets/character_info.dart';
-import 'package:projetoflutterapi/src/widgets/episodes_list.dart';
+import 'package:projetoflutterapi/src/core/entities/character.dart';
+import 'package:projetoflutterapi/src/core/entities/episode.dart';
+import 'package:projetoflutterapi/src/features/widgets/character_image.dart';
+import 'package:projetoflutterapi/src/features/widgets/character_info.dart';
+import 'package:projetoflutterapi/src/features/widgets/episodes_list.dart';
+import 'package:projetoflutterapi/src/infra/services/characters_api.dart';
 
 class Details extends StatefulWidget {
   final Character character;
